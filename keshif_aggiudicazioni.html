@@ -1,0 +1,80 @@
+<html>
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39" />
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script type="text/javascript" src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+		<script type="text/javascript" src="http://keshif.me/keshif.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="http://keshif.me/keshif.css"/ type="text/css">
+    <link rel="stylesheet" href="http://keshif.me/demo/css/style.css"/ type="text/css">
+    <link rel="stylesheet" href="http://keshif.me/demo/css/supplements.css"/ type="text/css">
+		<style>
+			#chart_div {
+				width: 890px;
+				height: 500px;
+			}
+			.kshfRecord, .partecipante, .theLabel {
+				font-size:8pt;
+			}
+		</style>
+		<script>
+		$(document).ready( function(){
+			browser = new kshf.Browser({
+				source: {
+					gdocId: '1TUMxxd9rGO-frSVotaYuHpL66Cn5TuPB68I9dlG2RXo',
+					tables: ["Aggiudicazioni","Importi_aggiudicati", "Lotti" ]
+				},
+				loadedCb: function(){
+					// expand cell content
+					kshf.Util.cellToArray(kshf.dt.Lotti, ['bagOfWords'],",", false);
+				},
+				domID: "#chart_div",
+		    showResizeCorner: true,
+				categoryTextWidth: 150,
+				barChartWidth: 90,
+				leftPanelLabelWidth: 150,
+				rightPanelLabelWidth: 120,
+				itemName: "Lotti aggiudicati",
+				summaries: [
+					{name:'Procedure di scelta', value:'sceltaContraente',panel:'left'},
+					{name:'Parole', value: function() {
+						var lotto = kshf.dt_id.Lotti[this.lottoId].data;
+						return lotto.bagOfWords;
+					},panel:'bottom'},
+					{name:'Importi aggiudicati per partecipante', value: function() {
+						var importi = kshf.dt_id.Importi_aggiudicati[this.id].data;
+						return importi.sommaImporti;
+					},panel:'bottom'},
+					{name:'Lotti aggiudicati per partecipante', value: function() {
+						var importi = kshf.dt_id.Importi_aggiudicati[this.id].data;
+						return importi.numeroAggiudicazioni;
+					},panel:'right'},
+				],
+				itemDisplay: {
+					sortColWidth: 65,
+					sortBy: [{name: 'Importo del lotto', value:'importoAggiudicazione'}],
+					textSearch: "ragioneSociale",
+					detailsToggle: 'off',
+					autoExpandMore: false,
+					// maxVisibleItems_Default: 25,
+					recordView: function(){
+						// var importi = kshf.dt_id.Importi_aggiudicati[this.id].data;
+						return "<span class='partecipante'>"+this.ragioneSociale+"</span>";
+					},
+					displayType: 'list',
+				}
+			});
+		});
+		</script>
+    <title></title>
+  </head>
+  <body>
+	<div class="contents">
+	<div id="chart_div"></div>
+	</div>
+	
+	</body>
+</html>
